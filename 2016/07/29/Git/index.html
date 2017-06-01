@@ -18,7 +18,7 @@
 
   <!--Open Graph Title-->
   
-      <meta property="og:title" content="UIDebuggingInformationOverlay调试视图"/>
+      <meta property="og:title" content="Git 简明指南"/>
   
   <!--Open Graph Description-->
   
@@ -37,7 +37,7 @@
 
   <!-- Title -->
   
-  <title>UIDebuggingInformationOverlay调试视图 - Rechard Man</title>
+  <title>Git 简明指南 - Rechard Man</title>
 
 
   <link rel="shortcut icon" href="/images/xbox.png">
@@ -125,17 +125,17 @@
         <!-- Title date & tags -->
         <div class="post-header">
           <h1 class="entry-title">
-            UIDebuggingInformationOverlay调试视图
+            Git 简明指南
             
           </h1>
           <p class="posted-on">
-          2017-06-01
+          2016-07-29
           </p>
           <div class="tags-links">
             
               
-                <a href="/tags/tools/" rel="tag">
-                  tools
+                <a href="/tags/git/" rel="tag">
+                  git
                 </a>
               
             
@@ -143,14 +143,64 @@
         </div>
         <!-- Post Main Content -->
         <div class="entry-content">
-          <p><img src="http://obsi4uxd9.bkt.clouddn.com/cbc.png.jpeg" alt=""></p>
+          <p><img src="http://obsi4uxd9.bkt.clouddn.com/1019673-9a8b1bf09cd33cd3.png" alt=""></p>
 <a id="more"></a>
-<p><a href="http://ryanipete.com/blog/ios/swift/objective-c/uidebugginginformationoverlay/" target="_blank" rel="external">原文链接</a></p>
-<h2 id="方法一-（启动直接显示）"><a href="#方法一-（启动直接显示）" class="headerlink" title="方法一 （启动直接显示）"></a>方法一 （启动直接显示）</h2><p>需要写在<code>- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions</code>里</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">#ifdef DEBUG</div><div class="line">#pragma clang diagnostic push</div><div class="line">#pragma clang diagnostic ignored "-Warc</div><div class="line">#performSelector-leaks"</div><div class="line">id debugClass = NSClassFromString(@"UIDebuggingInformationOverlay");</div><div class="line">static dispatch_once_t onceToken;</div><div class="line">dispatch_once(&amp;onceToken, ^&#123;</div><div class="line">    [debugClass performSelector:NSSelectorFromString(@"prepareDebuggingOverlay")];</div><div class="line">&#125;);</div><div class="line">id debugOverlayInstance = [debugClass performSelector:NSSelectorFromString(@"overlay")];</div><div class="line">[debugOverlayInstance performSelector:NSSelectorFromString(@"toggleVisibility")];</div><div class="line">#pragma clang diagnostic pop</div><div class="line">#endif</div></pre></td></tr></table></figure>
-<h2 id="方法二-（双指同时点击状态栏显示）-推荐"><a href="#方法二-（双指同时点击状态栏显示）-推荐" class="headerlink" title="方法二 （双指同时点击状态栏显示）#推荐#"></a>方法二 （双指同时点击状态栏显示）<em>#推荐#</em></h2><p>需要写在<code>- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions</code>里</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#ifdef DEBUG</div><div class="line">#pragma clang diagnostic push</div><div class="line">#pragma clang diagnostic ignored &quot;-Warc</div><div class="line">#performSelector-leaks&quot;</div><div class="line">//可视化调试</div><div class="line">Class overlay = NSClassFromString(@&quot;UIDebuggingInformationOverlay&quot;);</div><div class="line">[[overlay class] performSelector:NSSelectorFromString(@&quot;prepareDebuggingOverlay&quot;)];</div><div class="line">#pragma clang diagnostic pop</div><div class="line">#endif</div></pre></td></tr></table></figure>
-<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p><img src="http://obsi4uxd9.bkt.clouddn.com/aa.png.jpeg" alt=""></p>
+<h1 id="创建新仓库"><a href="#创建新仓库" class="headerlink" title="创建新仓库"></a>创建新仓库</h1><ul>
+<li>先<strong>cd</strong>到当前目录 <code>git init</code></li>
+</ul>
+<h1 id="检出仓库"><a href="#检出仓库" class="headerlink" title="检出仓库"></a>检出仓库</h1><ul>
+<li>本地克隆版本 <code>git clone</code> /path/to/repository</li>
+</ul>
+<ul>
+<li>如果是远端仓库 <code>git clone</code> username@host:/path/to/repository</li>
+</ul>
+<h1 id="添加和提交"><a href="#添加和提交" class="headerlink" title="添加和提交"></a>添加和提交</h1><ul>
+<li>提交到本地暂存区 <code>git add &lt;filename&gt;</code>  或者 <code>git add .</code></li>
+</ul>
+<ul>
+<li>提交到本地HEAD版本库 <code>git commit -m &quot;代码提交信息...&quot;</code> </li>
+</ul>
+<ul>
+<li>如果你想撤销改动 <code>git checkout -- &lt;filename&gt;</code> 或者 <code>git checkout -- .</code></li>
+</ul>
+<p><img src="http://obsi4uxd9.bkt.clouddn.com/1019673-3a94b52decd08b93.png" alt=""></p>
+<hr>
+<h1 id="推送改动"><a href="#推送改动" class="headerlink" title="推送改动"></a>推送改动</h1><ul>
+<li>提交到远端仓库<code>git push origin master</code> 可以把 <em>master</em> 换成你想要推送的任何分支</li>
+</ul>
+<ul>
+<li>如果你还没有克隆现有仓库，并欲将你的仓库连接到某个远程服务器，你可以使用如下命令添加：<code>git remote add origin &lt;server&gt;</code> 将你的改动推到服务器</li>
+</ul>
+<h1 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h1><p><img src="http://obsi4uxd9.bkt.clouddn.com/1019673-7c1ac5c43ed7ece1.png" alt=""></p>
+<hr>
+<ul>
+<li>创建一个叫做“dev2”的分支，并切换过去：<code>git checkout -b dev2</code></li>
+</ul>
+<ul>
+<li>切换回主分支： <code>git checkout master</code></li>
+</ul>
+<ul>
+<li>删除分支：<code>git branch -D dev2</code></li>
+</ul>
+<ul>
+<li>除非你将分支推送到远端仓库，不然该分支就是不为他人所见的：<code>git push origin &lt;branch&gt;</code></li>
+</ul>
+<h1 id="更新与合并"><a href="#更新与合并" class="headerlink" title="更新与合并"></a>更新与合并</h1><ul>
+<li>更新你的本地仓库至最新改动，执行：<code>git pull</code></li>
+</ul>
+<ul>
+<li>假如你想丢弃你在本地的所有改动与提交，可以到服务器上获取最新的版本历史，并将你本地主分支指向它：<code>git fetch origin</code><br><code>git reset --hard origin/master</code></li>
+</ul>
+<ul>
+<li>要合并其他分支到你的当前分支（例如 master）<code>git merge &lt;branch&gt;</code></li>
+</ul>
+<blockquote>
+<p>在这两种情况下，git 都会尝试去自动合并改动。遗憾的是，这可能并非每次都成功，并可能出现<em>冲突（conflicts）</em>。 这时候就需要你修改这些文件来手动合并这些<em>冲突（conflicts）</em>。改完之后，你需要执行如下命令以将它们标记为合并成功：<code>git add &lt;filename&gt;</code></p>
+<p>在合并改动之前，你可以使用如下命令预览差异：<code>git diff &lt;source_branch&gt; &lt;target_branch&gt;</code></p>
+</blockquote>
+<h1 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h1><p>使用git管理非常方便，配合使用<strong>iTerm2+Zsh</strong> 在命令行会更清晰</p>
+<p><img src="http://obsi4uxd9.bkt.clouddn.com/1019673-207105d8de58ddef.png.jpeg" alt=""></p>
+<p>Git图形化工具有很多，这里我使用的是<a href="https://desktop.github.com/" target="_blank" rel="external"><strong>GitHub DeskTop</strong></a> 和 <a href="https://github.com/git-up/GitUp" target="_blank" rel="external"><strong>GitUp</strong></a></p>
 
         </div>
       </article>
@@ -169,10 +219,10 @@
     <!-- Pre or Next -->
     <div class="nav-links">
       
-      
-        <div class="nav-next">
-          <a href="/2017/04/24/升级Xcode/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+        <div class="nav-previous">
+          <a href="/2016/08/12/multi-thread/" rel="prev"><span class="meta-arraw meta-arraw-left"></span> Older Posts</a>
         </div>
+      
       
     </div>
 

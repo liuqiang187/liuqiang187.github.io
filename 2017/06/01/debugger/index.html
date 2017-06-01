@@ -18,7 +18,7 @@
 
   <!--Open Graph Title-->
   
-      <meta property="og:title" content="多线程上传多张图片"/>
+      <meta property="og:title" content="UIDebuggingInformationOverlay调试视图"/>
   
   <!--Open Graph Description-->
   
@@ -37,7 +37,7 @@
 
   <!-- Title -->
   
-  <title>多线程上传多张图片 - Rechard Man</title>
+  <title>UIDebuggingInformationOverlay调试视图 - Rechard Man</title>
 
 
   <link rel="shortcut icon" href="/images/xbox.png">
@@ -125,17 +125,17 @@
         <!-- Title date & tags -->
         <div class="post-header">
           <h1 class="entry-title">
-            多线程上传多张图片
+            UIDebuggingInformationOverlay调试视图
             
           </h1>
           <p class="posted-on">
-          2016-08-12
+          2017-06-01
           </p>
           <div class="tags-links">
             
               
-                <a href="/tags/多线程/" rel="tag">
-                  多线程
+                <a href="/tags/tools/" rel="tag">
+                  tools
                 </a>
               
             
@@ -143,15 +143,14 @@
         </div>
         <!-- Post Main Content -->
         <div class="entry-content">
-          <blockquote>
-<p>多线程上传多张图片统一处理结果</p>
-</blockquote>
-<p><code>这里只说明一种上传请求本身异步的情况</code></p>
-<p>因为公司上传图片服务器拿到返回的地址，再请求接口</p>
-<p>所以同时上传多张图片到图片服务器，拿到返回<code>id</code>后再统一做处理</p>
-<figure class="highlight mm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">dispatch_group_t group = dispatch_group_create();    </div><div class="line"></div><div class="line"> dispatch_group_enter(group);</div><div class="line"><span class="built_in">NSLog</span>(<span class="string">@"dispatch_group_enter Q 1"</span>);</div><div class="line"><span class="comment">// 图片并行执行的线程一</span></div><div class="line">[[DataEngine sharedInstance] uploadAvatarImage:<span class="keyword">self</span></div><div class="line">                                         image:_uploadImage</div><div class="line">                                    onComplete:</div><div class="line"> ^(<span class="built_in">NSDictionary</span> *sourceDic, <span class="built_in">NSInteger</span> errorCode, <span class="built_in">NSString</span> *errorMsg, <span class="built_in">BOOL</span> hasMore, <span class="keyword">id</span> otherData) &#123;</div><div class="line">     </div><div class="line">     <span class="keyword">if</span> (errorCode == RequestErrorCodeSuccess) &#123;</div><div class="line">         <span class="built_in">NSString</span> * url = [sourceDic stringForKey:<span class="string">@"localUrl"</span>];</div><div class="line">         weakself.uploadUrl = url;</div><div class="line">         DDLogWarn(<span class="string">@" 第一张 //上传成功 %@"</span>,url);</div><div class="line">     &#125;</div><div class="line">     dispatch_group_leave(group);</div><div class="line"> &#125;];</div><div class="line"> </div><div class="line"> <span class="comment">// 图片并行执行的线程二</span></div><div class="line"> ...</div><div class="line"></div><div class="line">dispatch_group_notify(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, <span class="number">0</span>), ^&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id=""><a href="#" class="headerlink" title=""></a><a id="more"></a></h2><p><code>dispatch_group_enter(group)</code> 和 <code>dispatch_group_leave(group)</code>可以很好的控制处理时机，在网络请求本身异步的情况下</p>
-<p>想要使用<code>dispatch_group_notify</code>必须处理好网络请求的block着陆点才有效果</p>
+          <p><img src="http://obsi4uxd9.bkt.clouddn.com/cbc.png.jpeg" alt=""></p>
+<a id="more"></a>
+<p><a href="http://ryanipete.com/blog/ios/swift/objective-c/uidebugginginformationoverlay/" target="_blank" rel="external">原文链接</a></p>
+<h2 id="方法一-（启动直接显示）"><a href="#方法一-（启动直接显示）" class="headerlink" title="方法一 （启动直接显示）"></a>方法一 （启动直接显示）</h2><p>需要写在<code>- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions</code>里</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">#ifdef DEBUG</div><div class="line">#pragma clang diagnostic push</div><div class="line">#pragma clang diagnostic ignored "-Warc</div><div class="line">#performSelector-leaks"</div><div class="line">id debugClass = NSClassFromString(@"UIDebuggingInformationOverlay");</div><div class="line">static dispatch_once_t onceToken;</div><div class="line">dispatch_once(&amp;onceToken, ^&#123;</div><div class="line">    [debugClass performSelector:NSSelectorFromString(@"prepareDebuggingOverlay")];</div><div class="line">&#125;);</div><div class="line">id debugOverlayInstance = [debugClass performSelector:NSSelectorFromString(@"overlay")];</div><div class="line">[debugOverlayInstance performSelector:NSSelectorFromString(@"toggleVisibility")];</div><div class="line">#pragma clang diagnostic pop</div><div class="line">#endif</div></pre></td></tr></table></figure>
+<h2 id="方法二-（双指同时点击状态栏显示）-推荐"><a href="#方法二-（双指同时点击状态栏显示）-推荐" class="headerlink" title="方法二 （双指同时点击状态栏显示）#推荐#"></a>方法二 （双指同时点击状态栏显示）<em>#推荐#</em></h2><p>需要写在<code>- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions</code>里</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#ifdef DEBUG</div><div class="line">#pragma clang diagnostic push</div><div class="line">#pragma clang diagnostic ignored &quot;-Warc</div><div class="line">#performSelector-leaks&quot;</div><div class="line">//可视化调试</div><div class="line">Class overlay = NSClassFromString(@&quot;UIDebuggingInformationOverlay&quot;);</div><div class="line">[[overlay class] performSelector:NSSelectorFromString(@&quot;prepareDebuggingOverlay&quot;)];</div><div class="line">#pragma clang diagnostic pop</div><div class="line">#endif</div></pre></td></tr></table></figure>
+<h2 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h2><p><img src="http://obsi4uxd9.bkt.clouddn.com/aa.png.jpeg" alt=""></p>
 
         </div>
       </article>
@@ -170,13 +169,9 @@
     <!-- Pre or Next -->
     <div class="nav-links">
       
-        <div class="nav-previous">
-          <a href="/2016/08/23/Reveal/" rel="prev"><span class="meta-arraw meta-arraw-left"></span> Older Posts</a>
-        </div>
-      
       
         <div class="nav-next">
-          <a href="/2016/07/29/Git-简明指南/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+          <a href="/2017/04/24/uploadXcode/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
         </div>
       
     </div>
